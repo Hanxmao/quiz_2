@@ -1,0 +1,7 @@
+<h1>Idea Show Page</h1>
+<h2><%= @idea.title %></h2>
+<p> <%= @idea.body%> </p>
+<p><small> Created at: <%= @idea.created_at %>| Views: <%= @idea.view_count %></small></p>
+
+<%= link_to 'Edit', edit_idea_path(@idea)%>
+<%= button_to 'Delete', idea_path(@idea), method: :delete, form: { data: {turbo_confirm: 'are you sure?'} }%>
