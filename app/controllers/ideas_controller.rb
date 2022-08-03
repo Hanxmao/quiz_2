@@ -2,7 +2,7 @@ class IdeasController < ApplicationController
 
     #=============callback =========
     
-    before_action :find_idea, only: [:edit, :update, :show, :destroy]
+    before_action :find_idea, only: [:edit, :update, :show, :destroy,]
     before_action :authenticate_user!, except: [:show, :index]
     before_action :authorize_user!, only:[:edit, :update, :destroy]
     
