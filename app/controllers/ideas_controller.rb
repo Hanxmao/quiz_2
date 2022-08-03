@@ -1,8 +1,10 @@
 class IdeasController < ApplicationController
-    
+
     #=============callback =========
     
     before_action :find_idea, only: [:edit, :update, :show, :destroy]
+    before_action :authenticate_user!, except: [:show, :index]
+    before_action :authorize_user!, only:[:edit, :update, :destroy]
     
     #=========create ============    
         def new
@@ -11,8 +13,9 @@ class IdeasController < ApplicationController
     
         def create
             @idea = Idea.new(idea_params)
+            @idea.user = current_user
             if @idea.save
-                flash[:notice]= "Idea created sucessfully!"  #-->flash notice
+                flash[:notice]= "Idea created sucessfully!"  
                 redirect_to idea_path(@idea)   
             else
                 render :new
@@ -46,13 +49,13 @@ class IdeasController < ApplicationController
     
         def idea_params
             params.require(:idea).permit(:title, :description)
-            # the form use  form_with model:@idea, so the form name-value pair will store under the 
-            #params[:idea], that's why we need to requeire(:idea)
         end
     
         def find_idea
             @idea = Idea.find params[:id]
         end
 
-
+        def authorize_user!
+            redirect_to root_path, alert: "Not authorized" unless can?(:crud, @question)
+          end
 end
