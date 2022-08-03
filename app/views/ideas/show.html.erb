@@ -3,5 +3,37 @@
 <p> <%= @idea.description%> </p>
 <p><small> Created by: <%= @idea.user.full_name %></small></p>
 
-<%= link_to 'Edit', edit_idea_path(@idea)%>
-<%= button_to 'Delete', idea_path(@idea), method: :delete, form: { data: {turbo_confirm: 'are you sure?'} }%>
+<% if can? :crud, @idea %>
+    <%= link_to 'Edit', edit_idea_path(@idea)%>
+    <%= button_to 'Delete', idea_path(@idea), method: :delete, form: { data: {turbo_confirm: 'are you sure?'} }%>
+<% end %>
+<hr>
+<h2>Reviews</h2>
+<% @reviews.each do |review| %>
+  <div>
+    <%= review.body %>
+    <small>reviewed <%= time_ago_in_words(review.created_at) %> ago, by: <%= review.user.full_name %></small>
+    <% if can? :crud, review %>
+        <%= button_to "Delete", idea_review_path(@idea, review), method: :delete,form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <% end %>
+    <hr>
+  </div>
+<% end %>
+
+<h3>Write an review</h3>
+
+<% if @review.errors.any? %>
+  <ul>
+    <%  @review.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+<%= form_with(model:[@idea, @review]) do |f| %>
+  <div>
+    <%= f.label :body %>
+    <br>
+    <%= f.text_area :body, cols: 50, rows: 5 %>
+  </div>
+  <%= f.submit "Review" %>
+<% end %>

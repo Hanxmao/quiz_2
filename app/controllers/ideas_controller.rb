@@ -26,7 +26,9 @@ class IdeasController < ApplicationController
             @ideas = Idea.order(created_at: :desc)
         end
     
-        def show   
+        def show 
+            @reviews = @idea.reviews.order(created_at: :desc) 
+            @review = Review.new 
         end
     #========================update==========================
         def edit
